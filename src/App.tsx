@@ -1,12 +1,14 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useReducer } from "react";
 import "./App.css";
 import InputField from "./components/InputField";
 import TodoList from "./components/TodoList";
 import { ITodo } from "./model";
+import TodoReducer from "./reducers/indexreducer";
 
 const App: React.FC = () => {
   const [todo, setTodo] = useState<string>("");
   const [todos, setTodos] = useState<ITodo[]>([]);
+  const [state, dispatch] = useReducer(TodoReducer, []);
 
   console.log("todo --->", todos);
 
@@ -14,7 +16,7 @@ const App: React.FC = () => {
     event.preventDefault();
 
     if (todo) {
-      setTodos([...todos, { id: Date.now(), name: todo, isDone: false }]);
+      dispatch({ type: "add", payload: todo });
       setTodo("");
     }
   };
@@ -28,7 +30,7 @@ const App: React.FC = () => {
       </section>
 
       <section className="display_section">
-        <TodoList todos={todos} setTodos={setTodos} />
+        <TodoList todos={state} setTodos={setTodos} />
       </section>
     </div>
   );
